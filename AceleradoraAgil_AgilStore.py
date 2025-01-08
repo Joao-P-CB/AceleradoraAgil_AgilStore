@@ -1,3 +1,11 @@
+import json
+
+produtos = []
+
+lista_produtos = { #Dicionário para salvar os dados no Json ao final da execução
+    "lista_completa": produtos
+}
+
 def ler_numero(flag_type):  # Funcao que le entrada do teclado e testa caso o usuario inseriu um numero ou nao
     repetir = 1
     # Em geral a funcao garante que o programa nao acabe travando e mantem o corpo principal mais limpo
@@ -81,11 +89,20 @@ def imprime_produto(
 # ________________________________________________________________________________________
 
 
-produtos = []
-op = 0
-total_id = 1
+op = 0 # opção na qual o usuário irá navegar no menu, começa como 0 para ganrantir que irá entrar no while
+file_path = './produtos.json' # Arquivo local onde irá ler os dados das execuções anteriores
 
 print("\nSeja bem-vindo(a) ao controle de estoque da AgilStore!")
+
+try:
+    with open(file_path,'r') as input_file: # Verifica se o arquivo existe, se existir o mesmo será lido para preencher a lista produtos
+        lista_lida = json.load(input_file)
+        produtos = lista_lida['lista_completa']
+        total_id = produtos[len(produtos) - 1][4] + 1 # Retoma total_id de onde parou da última vez
+        print("Dados carregados com sucesso!")
+except IOError: # Caso o arquivo não exista, começa a ler normalmente
+    total_id = 1
+
 
 while op != 6:
     print("\nComandos a seguir: \n\n 1) Adicionar produto \n 2) Listar produto \n 3) Atualizar produto \n 4) Excluir produto \n 5) Buscar produto \n 6) Encerrar programa \n")
@@ -99,7 +116,7 @@ while op != 6:
             teste_prod_existente = 1
 
             while teste_prod_existente == 1:  # flag para testar se o produto já existe. Caso o usuário decida inserir um novo ele retornará a esse ponto
-                texto_nome = input("\nDigite o nome do produto a ser adicionado: ")
+                texto_nome = input("\n\nDigite o nome do produto a ser adicionado: ")
                 texto_nome = texto_nome.capitalize()  # Mantém os nomes com a primeira letra maiúsicula, ajuda com padronização e em testes para garantir que não há nomes repetidos
 
                 if len(produtos) == 0:  # Caso a lista de produtos esteja vazia, não realiza testes, apenas segue o processo de inserção
@@ -121,14 +138,14 @@ while op != 6:
                         # Por isso mantive o trecho para que ele escolha se quer voltar ao menu ou apenas tentar novamente mesmo que seja facil de ele voltar a esse ponto.
                         while teste_continuar != 1 and teste_continuar != 2:
 
-                            print("\nProduto ja se encontra na base de dados.\n")
-                            print("Gostaria de tentar novamente?\n 1) Sim \n 2) Nao ")
+                            print("\n\nProduto ja se encontra na base de dados.\n")
+                            print("Gostaria de tentar novamente?\n 1) Sim \n 2) Nao \n\n ")
                             teste_continuar = ler_numero(4)
 
                             if teste_continuar == 2:  # Se o usuário decidiu não tentar novamente pula o resto do case
                                 teste_prod_existente = 0
                                 continuar = 0
-                                input("\nVoltando ao menu principal. \nPressione enter para continuar.")
+
                             elif teste_continuar != 1:  # Se o usuário não digitou uma opcão válida então repete a pergunta
                                 print("Resposta invalida, tente novamente.")
 
@@ -184,7 +201,7 @@ while op != 6:
                         input("\nPressione Enter para continuar.")
 
                     case 5:  # Como o codigo de filtrar categoria é um tanto diferente do resto e apenas acontece nesse caso, a função foi escrita local mesmo
-                        categoria_lista = input("\nQual a categoria que deseja listar? ")
+                        categoria_lista = input("\n\nQual a categoria que deseja listar? ")
                         categoria_lista = categoria_lista.capitalize()  # Pede a categoria a ser filtrada
                         achou = 0  # Flag se houve algum item encontrado
                         print("\n\nNome     | Categoria     | Quantidade     | Preco     | ID     \n")
@@ -315,7 +332,7 @@ while op != 6:
 
         case 4:  # Caso de remoção de produtos
             if len(produtos) > 0:
-                print("\nQual o produto que deseja remover? Digite 0 case deseja voltar ao menu anterior")
+                print("\n\nQual o produto que deseja remover? Digite 0 case deseja voltar ao menu anterior")
                 lista_ids()
                 valido = 0
                 index_remover = -1
@@ -381,7 +398,12 @@ while op != 6:
                 input("\nA lista de produtos esta vazia. \nPressione enter para continuar.")
 
         case 6:  # Encerra o programa
-            print("\nPrograma Encerrando!")
+            print("\nPrograma Encerrado!")
+            if len(produtos) > 0:
+                print("Salvando os dados.")
+                produtos[0][0] = produtos[0][0] # Por algum motivo, após excluír um elemento o programa salva uma lista vazia no arquivo JSon, porém interagindo com a lista novamente soluciona isso.
+                with open(file_path,'w') as output_file: # Por causa disso eu coloquei uma interação básica com a lista antes de encerrar para garantir que os dados sejam salvos.
+                    json.dump(lista_produtos, output_file) # Eu não sei o que causa isso, realizei testes e não consigo entender o porquê, por isso a solução foi mais "bandaid"
 
         case _:  # Opção inválida
             print("\nOpcao invalida, tente novamente.")
