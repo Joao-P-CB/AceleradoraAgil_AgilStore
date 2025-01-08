@@ -12,7 +12,9 @@ Tenho mais experiência em programação em C, e um pouco de Python, por isso fi
 
 Feito em python, o programa é simples de utilizar e lê as entradas do usuário de forma rápida, permitindo-o facilmente identificar as opções que deseja e seleciona-las via números. Fora dos menus o programa irá pedir ao usuário informações que podem ser palavras ou apenas um Enter para seguir.
 
-O código foi feito muito com a experiência do usuário em mente, garantindo que o mesmo sempre consiga digerir o feedback do código antes de preencher a tela com informações. Em diversos pontos o programa permite o usuário voltar ao menu anterior, dando o máximo de fluidez na experiência do usuário, procurando dar a sensação de controle sobre o programa para que o mesmo se sinta confortável.
+Ao final da execução, o programa irá salvar os dados no arquivo 'produtos.json' (irá criar esse arquivo caso não exista). Ao iniciar o programa tentará abrir o mesmo arquivo, caso o arquivo exista os dados serão lidos e preenchidos no vetor 'produtos' onde é armazenados os dados inseridos. Com isso o usuário terá seus dados salvos após o encerramento da execução.
+
+O código foi feito com a experiência do usuário em mente, garantindo que o mesmo sempre consiga digerir o feedback do código antes de preencher a tela com informações. Em diversos pontos o programa permite o usuário voltar ao menu anterior, dando o máximo de fluidez na experiência do usuário, procurando dar a sensação de controle sobre o programa para que o mesmo se sinta confortável.
 
 Muito do código utiliza Match/Case para pois maior parte do código se trata de menus onde o usuário entra nas opções desejadas. 
 A segunda parte mais importante do código é a validação de informações inseridas pelo usuário, como várias informações são específicas, exemplos: números não podem receber caracteres, menus tem limites de opções e nomes de produtos não podem ser repetidos. Por causa disso o código utiliza muitos testes de If/Else e loops While para repetir os inputs até que algo válido seja enviado.
